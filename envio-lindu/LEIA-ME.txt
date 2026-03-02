@@ -1,0 +1,52 @@
+=====================================================
+ ENVIO — Funcionalidades Novas: Role CRI + Notificações
+=====================================================
+
+Este pacote contém TODOS os arquivos novos e modificados
+referentes às funcionalidades de:
+
+  1) Role CRI (novo cargo no sistema)
+  2) Sistema de Notificações (completo)
+
+-----------------------------------------------------
+ESTRUTURA DOS ARQUIVOS:
+-----------------------------------------------------
+
+Sql/
+  migration_cri_notificacoes.sql  → [NOVO] SQL para adicionar role CRI e criar tabela Notificacao
+
+php/configs/
+  auth.php                        → [MODIFICADO] Adicionada função isCri() e can_edit()
+  notificacao_helper.php          → [NOVO] Helper centralizado para criar notificações
+
+php/controllers/
+  notificacoes_process.php        → [NOVO] API backend de notificações (count, list, marcar lida, etc.)
+  cursos_process.php              → [MODIFICADO] Adicionadas chamadas criarNotificacao()
+  professores_process.php         → [MODIFICADO] Adicionadas chamadas criarNotificacao()
+  salas_process.php               → [MODIFICADO] Adicionadas chamadas criarNotificacao()
+  turmas_process.php              → [MODIFICADO] Adicionadas chamadas criarNotificacao()
+  reservas_process.php            → [MODIFICADO] Adicionadas chamadas criarNotificacao() + permissão CRI
+  planejamento_process.php        → [MODIFICADO] Notificação de registro_horario com suporte CRI
+
+php/components/
+  header.php                      → [MODIFICADO] Menu CRI na sidebar, badge CRI no topo, painel de notificações
+  footer.php                      → [MODIFICADO] Inclusão do script notificacoes.js
+
+php/views/
+  usuarios.php                    → [MODIFICADO] Role CRI nos modais de criar/editar usuário
+  gerenciar_reservas.php          → [MODIFICADO] Permissão CRI para gerenciar reservas
+
+js/
+  notificacoes.js                 → [NOVO] Frontend completo do sistema de notificações
+
+index.php                         → [MODIFICADO] Dashboard CRI adicionado (seção CRI Dashboard)
+
+-----------------------------------------------------
+COMO APLICAR:
+-----------------------------------------------------
+
+1. Execute o SQL: Sql/migration_cri_notificacoes.sql
+2. Substitua/mescle os arquivos nas pastas correspondentes do projeto final
+3. Os arquivos marcados como [NOVO] podem ser copiados diretamente
+4. Os arquivos marcados como [MODIFICADO] devem ser comparados com a versão atual
+

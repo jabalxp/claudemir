@@ -1,0 +1,183 @@
+<?php
+/**
+ * User Management Controller (ATUALIZADO)
+ * 
+ * ALTERAÇÕES APLICADAS:
+ * - Role 'cri' adicionada na validação de roles permitidas (create e edit)
+ * - Apenas admin pode criar/editar usuários com role CRI
+ */
+require_once '../configs/db.php';
+require_once '../configs/auth.php';
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Must be authenticated
+if (empty($_SESSION['user_id'])) {
+    http_response_code(403);
+    echo json_encode(['error' => 'Não autenticado.']);
+    exit;
+}
+
+$action = $_POST['action'] ?? $_GET['action'] ?? '';
+$user_role = $_SESSION['user_role'] ?? '';
+
+switch ($action) {
+    case 'create':
+        // Both admin and gestor can create users
+        $nome = trim($_POST['nome'] ?? '');
+        $email = trim($_POST['email'] ?? '');
+        $role = $_POST['role'] ?? 'professor';
+        $docente_id = !empty($_POST['docente_id']) ? (int) $_POST['docente_id'] : null;
+
+        // Validate inputs
+        if (empty($nome) || empty($email)) {
+            $_SESSION['usuarios_error'] = 'Nome e e-mail são obrigatórios.';
+            header('Location: ../views/usuarios.php');
+            exit;
+        }
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $_SESSION['usuarios_error'] = 'E-mail inválido.';
+            header('Location: ../views/usuarios.php');
+            exit;
+        }
+
+        // Gestor can ONLY create Professor
+        if ($user_role === 'gestor') {
+            $role = 'professor';
+        }
+
+        // Sanitize role
+        if (!in_array($role, ['admin', 'gestor', 'professor', 'cri'])) {
+            $role = 'professor';
+        }
+
+        // Only admin can create admin/gestor/cri users
+        if (($role === 'admin' || $role === 'gestor' || $role === 'cri') && $user_role !== 'admin') {
+            $role = 'professor';
+        }
+
+        // Check if email already exists
+        $stmt = $conn->prepare("SELECT id FROM Usuario WHERE email = ?");
+        $stmt->bind_param('s', $email);
+        $stmt->execute();
+        if ($stmt->get_result()->num_rows > 0) {
+            $_SESSION['usuarios_error'] = 'Este e-mail já está cadastrado.';
+            $stmt->close();
+            header('Location: ../views/usuarios.php');
+            exit;
+        }
+        $stmt->close();
+
+        // Hash default password
+        $hash = password_hash('senaisp', PASSWORD_BCRYPT);
+
+        $stmt = $conn->prepare("INSERT INTO Usuario (nome, email, senha, role, docente_id, obrigar_troca_senha) VALUES (?, ?, ?, ?, ?, 1)");
+        $stmt->bind_param('ssssi', $nome, $email, $hash, $role, $docente_id);
+        $stmt->execute();
+        $stmt->close();
+
+        $_SESSION['usuarios_success'] = 'Usuário criado com sucesso! Senha padrão: senaisp';
+        header('Location: ../views/usuarios.php');
+        exit;
+
+    case 'edit':
+        // Only admin can edit users
+        if ($user_role !== 'admin') {
+            http_response_code(403);
+            $_SESSION['usuarios_error'] = 'Permissão insuficiente.';
+            header('Location: ../views/usuarios.php');
+            exit;
+        }
+
+        $id = (int) ($_POST['id'] ?? 0);
+        $nome = trim($_POST['nome'] ?? '');
+        $email = trim($_POST['email'] ?? '');
+        $role = $_POST['role'] ?? 'professor';
+        $docente_id = !empty($_POST['docente_id']) ? (int) $_POST['docente_id'] : null;
+
+        if (empty($nome) || empty($email) || !$id) {
+            $_SESSION['usuarios_error'] = 'Dados inválidos.';
+            header('Location: ../views/usuarios.php');
+            exit;
+        }
+
+        // Sanitize role
+        if (!in_array($role, ['admin', 'gestor', 'professor', 'cri'])) {
+            $role = 'professor';
+        }
+
+        // Check uniqueness of email (exclude current user)
+        $stmt = $conn->prepare("SELECT id FROM Usuario WHERE email = ? AND id != ?");
+        $stmt->bind_param('si', $email, $id);
+        $stmt->execute();
+        if ($stmt->get_result()->num_rows > 0) {
+            $_SESSION['usuarios_error'] = 'Este e-mail já está em uso por outro usuário.';
+            $stmt->close();
+            header('Location: ../views/usuarios.php');
+            exit;
+        }
+        $stmt->close();
+
+        $stmt = $conn->prepare("UPDATE Usuario SET nome = ?, email = ?, role = ?, docente_id = ? WHERE id = ?");
+        $stmt->bind_param('sssii', $nome, $email, $role, $docente_id, $id);
+        $stmt->execute();
+        $stmt->close();
+
+        $_SESSION['usuarios_success'] = 'Usuário atualizado com sucesso!';
+        header('Location: ../views/usuarios.php');
+        exit;
+
+    case 'delete':
+        // Only admin can delete users
+        if ($user_role !== 'admin') {
+            http_response_code(403);
+            $_SESSION['usuarios_error'] = 'Permissão insuficiente.';
+            header('Location: ../views/usuarios.php');
+            exit;
+        }
+
+        $id = (int) ($_GET['id'] ?? 0);
+
+        // Prevent self-deletion
+        if ($id === (int) $_SESSION['user_id']) {
+            $_SESSION['usuarios_error'] = 'Você não pode excluir seu próprio usuário.';
+            header('Location: ../views/usuarios.php');
+            exit;
+        }
+
+        $stmt = $conn->prepare("DELETE FROM Usuario WHERE id = ?");
+        $stmt->bind_param('i', $id);
+        $stmt->execute();
+        $stmt->close();
+
+        $_SESSION['usuarios_success'] = 'Usuário removido com sucesso!';
+        header('Location: ../views/usuarios.php');
+        exit;
+
+    case 'reset_password':
+        // Only admin can reset passwords
+        if ($user_role !== 'admin') {
+            http_response_code(403);
+            $_SESSION['usuarios_error'] = 'Permissão insuficiente.';
+            header('Location: ../views/usuarios.php');
+            exit;
+        }
+
+        $id = (int) ($_GET['id'] ?? 0);
+        $hash = password_hash('senaisp', PASSWORD_BCRYPT);
+
+        $stmt = $conn->prepare("UPDATE Usuario SET senha = ?, obrigar_troca_senha = 1 WHERE id = ?");
+        $stmt->bind_param('si', $hash, $id);
+        $stmt->execute();
+        $stmt->close();
+
+        $_SESSION['usuarios_success'] = 'Senha redefinida para o padrão (senaisp).';
+        header('Location: ../views/usuarios.php');
+        exit;
+
+    default:
+        header('Location: ../views/usuarios.php');
+        exit;
+}

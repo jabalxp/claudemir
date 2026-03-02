@@ -1,33 +1,431 @@
-RESUMO DAS IMPLEMENTAÇÕES - SISTEMA DE GESTÃO ESCOLAR (SENAI STYLE)
+1-
 
-1. Redesign de Interface (UI/UX):
-   - Implementação de um dashboard moderno inspirado no padrão SENAI.
-   - Barra lateral (Sidebar) vermelha fixa com logo e navegação intuitiva.
-   - Header superior dinâmico com saudações e perfil do usuário.
-   - Layout de cards para a home e tabelas refinadas para listagens.
+ao selecionar um professor no gerar agenda dentro de planejamento, mostra um calendário e uma opção de mudar a visualização
 
-2. Sistema de Temas (Light/Dark Mode):
-   - Implementação de troca de tema (claro/escuro) com persistência.
-   - Uso de variáveis CSS para garantir consistência visual em ambos os modos.
-   - Persistência garantida via LocalStorage (versão HTML) e Cookies (versão PHP).
+no modo gráfico horizontal o vermelho vai pro final e o verde fica no começo, quando clica no verde ele abre uma modal que permite cadastrar um horário para aula ou algum curso, coloca os dias da semana (segunda e terça por exemplo) e até quando ele vai ter esse curso/aulas (do dia 24/02 até dia 03/03)
 
-3. Calendários e Navegação:
-   - Criação de visualização de agenda estilo "Trello" para Professores e Salas.
-   - Implementação de setas de navegação por semana nos calendários.
-   - Etiquetas informativas dentro dos cards de aula (ex: indicação de sala no horário do professor).
+se o horário estiver disponível, atualiza o calendário e aumenta o gráfico horizontal vermelho como prova visual.
 
-4. Migração para PHP/MySQL Dinâmico:
-   - Estruturação de banco de dados robusto (MySQL) com tabelas para Professores, Salas (Ambientes), Cursos, Turmas e Agenda.
-   - Criação de componentes reutilizáveis (header.php, footer.php).
-   - CRUD completo para todas as entidades principais.
+se não estiver disponível aparece uma modal de notificação em cima da pagina que mostra que aquela data não esta disponível (semana ou dia da semana), na mesma pagina.
 
-5. Motor de Planejamento e Conflitos (O Coração do Sistema):
-   - Módulo de "Planejamento de Turma" que gera agendas automaticamente por períodos (data início/fim).
-   - Motor de detecção de conflitos que vasculha o banco dia a dia.
-   - Bloqueio automático de registros se o Professor ou a Sala já estiverem ocupados no horário/dia selecionado.
-   - Uso de transações SQL para garantir a integridade dos dados na geração da agenda.
+o calendário vai ser mensal, deve tambêm mostrar o nome do professor naquela data e ao passar o mouse em cima mostra o horário que ele estará em aula. com setas pra direita pra ir pro próximo mês, e setas pra esquerda pra ir pro mês anterior, as setas devem estar no cabeçalho do calendário, ao clicar no mes do calendario, mostra todos os meses do ano. 
 
-6. Limpeza e Organização:
-   - Migração total de .html para .php.
-   - Remoção de arquivos estáticos redundantes.
-   - Padronização do CSS e JavaScript.
+
+dashboard - aulas de hoje substuido por resumo de horários dos professores, inicialmente mostra os professores com mais tempo livre, modelo com base no que foi feito no planejamento - gerar agenda. Opção de filtrar por professores com menos horários e mais horários disponíveis ao invez de filtrar por cidades, adicionar um botão do lado direito do select para redirecionar para a pagina 'tabela professores'.
+
+tabela professores - nova pagina dentro do dropdown planejamento mostra uma tabela de todos os professores com o mesmo modelo de gráfico horizontal e opção de buscar por nome especifico com um select de filtrar por menos e mais disponíveis. Também uma seta pra esquerda e direita pra ir pra próxima sessão da tabela ou voltar pra ultima.
+
+
+2-
+
+Dashboard- depois do gráfico, mostrar em % o quanto a pessoa está disponível. Mostrar baseado no mês e não na semana.
+
+Planejamento / gerar agenda - remover o 'planejamento de turmas' inicial, apenas a partir de 'gerar agenda', ao selecionar um professor ir até a aula mais recente deles. Mostrar gráfico baseado no mês e se o professor tiver horário em um certo mês, ao clicar e ver todos os meses do ano, aparecer uma bolinha vermelha, caso contrario, uma bola verde.
+
+Calendário - No calendário cada domingo, deixar o fundo meio cinza para diferenciar como dia de não trabalho
+
+Modal cadastrar Horário - Adicionar data inicio e data fim.
+
+3-
+
+Dashboard - aulas baseado no mês não em 6 dias da semana, (segundas a sábado) não considerando os domingos 
+
+Gerar Agenda - parte do gráfico, remova o overflow, ao selecionar um professor, apenas aquele professor aparece na tabela, e não todos, refazer a maneira que o gráfico funciona incluindo a funcionalidade de colocar uma aula em um horário, modal ao clicar na área verde deve ser a mesma que a modal de cadastrar horário das outras, se possível fazer algo mais visual e intuitivo também.
+
+Tabela Professores - Ao clicar na tabela professores, a aba docente fica marcada como ativo também na navbar, concerte. Também os dias ocupados deve ser mensal, não semanal, e apenas 10 professores por aba da tabela.
+
+gerar agenda e tabela professores - ao clicar, o menu dropdown continua ativo.
+
+4-
+
+Dashboard- erro, 5 aulas em 2 dias, 'diasneste mês' erro de gramatica
+
+Gerar agenda - erro, calendário também só aparece 2 dias, curso não aparecendo, gráfico continua com overflow.
+
+Tabela professores - continua com 'docentes' ativo, mesmo erro de logica 5 aulas e 2 dias ocupados
+
+5-
+
+Geral - erro de logica grande, dias não sendo contados com as aulas, agenda não aparecendo todas as aulas. Maneira muito confusa de cadastrar aulas novas, códigos desnecessários e grandes. Área de gráficos em horizontal muito confuso e continua com o overflow pra direita. Remova também o 2025 da data de cima da área de gráficos no gerar agenda, pegue o ano atual
+
+6 - 
+
+Remova todos os comentários e mude os scripts inline de cada arquivo para arquivos separados ou dentro de um unico js se necessário, diminua as linhas, otimize os codigos e faça os codigos mais fáceis de serem entendidos, de modo que não seja muito complexo 
+
+7-
+
+Dashboard- ao clicar no espaço verde do resumo de horários dos professores, abrir 'Gerar Agenda'
+
+Ao invez de selecionar professor por nome em 'Gerar Agenda', selecionar professor pela área dele, exemplo: mostrar todos os professores de ti, almoxarifado.
+
+Tabela professores - gráfico horizontal novamente estilo do resumo de horários do dashboard, ao clicar na área verde também redireciona para 'Gerar Agenda'
+
+Cursos- Problema na tabela
+
+8-
+
+Dashboard e Tabela professor - filtrar por área, exemplo: mostrar todos os professores de ti, almoxarifado. Ao passar o mouse em cima do grafico verde, mostrar o dia mais proximo que ele está livre, exemplo: 'Dia livre (26/02/2026)'.
+
+Geral - deixar os cadastros mais facil de entender.
+
+Modo claro - Muito claro, deixe as cores mais comfortáveis, mas continuando claras
+
+turma - em nova turma, substituir o input de período por um select que permite escolher as seguintes opções: Manhã, Tarde, Noite, Integral.
+
+Planejamento - Em gerar agenda, Calendário deve possuir um botão que seleciona especificamente os períodos: Manhã, Tarde, Noite, Integral.
+Em gerar agenda, Gráfico, abaixo de 'selecione o professor', na div de ocupado / disponível, melhorar estilização, manter os gráficos de barra
+
+9-
+
+Cadastrar Horário - Horário inicio deve ter como valor minimo 7:30.
+
+Calendário - botão de mostrar período manha, tarde, noite e integral o período que o professor estiver livre, aparecer um ícone verde se não um ícone vermelho, ao selecionar, botão fica vermelho como visual de 'selecionado'.
+
+Turma - Período, se o professor já possuir uma aula no período Manha, Tarde, Noite ou integral, remover a opção de poder escolher aquele período para o professor.
+
+10-
+
+Gerar Agenda - botão período não funcional. Ao cadastrar um professor, ir diretamente pra primeira aula marcada recentemente, exemplo: Cadastrei um curso de java do dia 01/02 ao dia 02/02, levar direto ao dia 01/02 no calendário.
+
+Turmas - Docente responsável - não necessário.
+
+div 'conflito de abiente' - mostrar o dia em especifico que a sala está ocupada / professor está ocupado.
+
+Geral - Não está mostrando em agenda corretamente, e as barras visuais dos professores não está mudando.
+
+Logica geral está falha, se possível melhore
+
+11 - 
+
+Gerar Agenda - ao clicar no período 'noite, tarde etc.' o circulo verde passa a ficar vermelho. Mesmo selecionado, também não está funcionando nem mostrando os períodos específicos, agenda continua quebrada e não mostrando as datas de aula daquele período especifico.
+
+Dashboard - gráfico de disponibilidade quebrado.
+
+Tabela Professores - completamente quebrado.
+
+Modo de Simulação: Antes de confirmar a abertura de uma turma, o sistema possui um modo seguro que faz os testes em memória e lista os docentes e ambientes disponíveis, sem gravar logo os dados na base oficial.
+
+Verificação de Conflitos: Feita de modo confuso, facilite o entendimento e simplifique a maneira que funciona e é mostrado
+
+12-
+
+Geral - Adicionar lógica de períodos, professor trabalha em 3 períodos. Manhã, Tarde e Noite, podendo também ser integral: Manhã e Tarde, Se o professor estiver em um horário em um dia específico, remover a opção do professor poder trabalhar naquele período naquele dia ao cadastrar horários.
+
+
+Tabela professores - 'dias ocupados' está errado, fala que tem 2 dias ocupados
+
+Calendário -  Ao clicar em um dia, abrir a modal de cadastrar aulas com aquele dia sendo o inicial.
+
+Dashboard - adicionar botão Modo de simulação.
+
+Modo de Simulação: Antes de confirmar a abertura de uma turma, o sistema possui um modo seguro que faz os testes em memória e lista os docentes e ambientes disponíveis, sem gravar logo os dados na base oficial.  
+
+faça utilizando mcp context7 e mcp sequentialthinking
+
+13-
+
+Modo Simulação - Cores erradas, Se algum professor e sala estiver disponível, adicionar opção para adicionar aquele professor para aquela data.
+
+Calendário - adicionar opção de ver por períodos. Manha, tarde, noite ou Integral.
+
+Tabela professores e dashboard - 'dias uteis' renomeado para 'dias uteis do mes' e 'dias ocupados' renomeado para 'dias ocupados do mes'
+
+faça utilizando mcp context7 e mcp sequentialthinking
+
+
+14- 
+
+
+Modo simulação - mudar a lógica, mostra o curso de uma Área especifica e busca pelo professor com maior tempo livre, da mesma área, com opções de filtragem e ao clicar no nome do professor/sala, permitir escolher um outro professor/sala relacionada aquela matéria em especifico, melhorar o css e o estilo da modal apenas no modo escuro.
+
+
+faça utilizando mcp context7 e mcp sequentialthinking
+
+15-
+
+Geral- Modo claro muito claro, faça mais suave e mais comfortavel para os olhos.
+
+dashboard - Modo simulação, estilize melhor, jogue no style.css e use variáveis globais para os temas claros e escuros
+
+Gerar Agenda - ao clicar em cima de um dia, puxar direto o dia da semana dentro do checkbox da div, exemplo: ao clicar na quinta, já marcar quinta feita, modal cadastrar horário não funcionando.
+
+faça utilizando mcp context7 e mcp sequentialthinking
+
+16-
+
+Geral - Refazer funcionalidades de 'dias da semana' ou a maneira que isso funciona, seja marcar aula, cadastrar, qualquer coisa relacionada a isso.
+
+Geral - Refazer funcionalidades de 'Periodos', tudo relacionado a isso, em calendários não consegue separar por períodos, em professores, faça com que professores que já tem uma aula marcada em um período espefico não possa ter outra aula marcada no mesmo período do mesmo dia / semana de aula marcada
+
+
+Dashboard - Não consegue clicar em 'planejamento'
+
+Dashboard - Modo Seguro - ao clicar em selecionar, abrir uma modal para selecionar outros professores com as mesmas categorias, Mesma coisa com 'ambiente'. Se o simulador mostrar que o professor está livre e o ambiente está livre, mostrar um botão para cadastrar.
+
+
+Planejamento - Gerar Agenda -  Não marcando como cadastrado. Ou seja, Ao clicar em cima de um dia e cadastrar, não mostra na agenda o dia que foi marcado, Nem no calendário nem na opção Gráfico, não atualiza. Em todos os gráficos, continua como apenas 3 dias, sendo que foi cadastrado múltiplos além daqueles.
+
+Faça utilizando mcp context7 e mcp sequentialthinking.
+
+
+17-
+
+Dashboard - ainda quebrada, não consegue clicar no 'Planejamento', ao mudar a data filtrada, não muda a quantidade de aulas para o próximo mês.
+Modo simulação - Refazer sistema de docente e ambiente sugerido.
+Sugestão:
+
+1- Selecionar o curso que já foi registrado.
+2- selecionar data inicio e data fim.
+3- selecionar período.
+4- selecionar dias da semana.
+5- analisar
+
+ao analisar mostrar:
+
+Docente sugerido (baseado na sua área)
+Sala sugerida (baseado em se é relacionada ao curso. ex: Laboratório de informática para cursos de informática)
+Ao clicar no nome do professor, mostrar outras escolhas, o mesmo com o ambiente.
+
+Geral - Periodos: Período Integral - 07:30 até as 17:30, Período Manha - 07:30 até as 11:30, Período Noite - 19:30 até as 23:30.
+
+Planejamento - Gerar Agenda: Calendário - Dashboard: Ao mudar o mês do calendário, mudar a quantidade de mês baseado em quantas aulas o docente tem naquele mês, exemplo: Fevereiro 3 aulas -> Março 4 aulas -> Abril 5 aulas, etc..  
+embaixo do dashboard, mostrar um texto que mostra "Baseado no mês".
+Gerar Agenda: Gráfico - Dashboard: Adicionar uma seta para mudar o mês desejado de visualização. Exemplo: Fevereiro 3 aulas -> Março 4 aulas -> Abril 5 aulas, etc.
+
+Faça utilizando mcp context7 e mcp sequentialthinking.
+
+
+18 - 
+
+Dashboard continua sem poder clicar em 'Planejamento'.
+
+Modo de simulação em dashboard com um css completamente quebrado e mal estruturado, antes estava bom, não precisava mudar.
+
+Geral - Para a facilidade do modo simulação, faça a 'area de conhecimento' limitada com base em Àreas que o senai - sp possui, exemplo: um select com area de ti, mecatronica, etc. Para que seja mais facil e mais simples de fazer o modo simulação funcionar, dai só precisa fazer o relacionamento entre ambos para buscar o melhor professor com base em sua área e carga horária.
+
+Geral - re-estruture o site para que possua tais elementos no banco / para cadastrar:
+
+1 imagem - Docentes.
+2 imagem - ambientes.
+3 imagem - cursos.
+4 imagem - turmas : Curso	Tipo	SIGLA DA TURMA	Carga Horária	Vagas	Tipo	Data Início	Data Fim	Horário	Dias Semana	Docente 1	Docente 2	Docente 3	Docente 4	Ambiente	Local.
+
+5 imagem - Agenda
+
+
+19 - 
+
+Cursos: ao cadastrar um curso, coloque um select para selecionar a área especifica daquele curso ao invez de um input
+
+
+20 - 
+
+Gerar Agenda - Ao passar o mouse em cima, era pra aparecer no hover a data e o horário da aula
+
+Modo de simulação - ao clicar em ver docente, leva a um espaço bugado do calendário onde nada funciona, mesmo acontece com a tabela professores ao clicar no verde e no dashboard ao clicar no verde, refazer a logica de adicionar turmas, fazer com que o docente só pode ser adicionado ao adicionar horário pra fazer sentido
+
+Gerar Agenda - Modal de cadastro de horário quebrada, Ao clicar no botão do período manha, noite ou integral a bolinha fica vermelha ao ficar ativa.
+
+Faça utilizando mcp context7 e mcp sequentialthinking.
+
+21 - 
+
+Geral - Remova os css e js inline e coloquem em seus respectivos arquivos, css -> style.css. Js -> seuproprioarquivo.js
+
+Ao clicar na área verde do grafico horizontal em dashboard, está abrindo o calendário e a modal para cadastrar, não precisa abrir a modal, apenas o calendário.
+
+Turmas - "inicio / Fim" está com o nome de S e E, em inglês, renomeie para português 'I' e 'F'.
+
+Tabela professores - ao clicar na área verde, ele vai para o calendário mas ele não mostra certo as horas, ele está quebrado.
+
+Calendário - Manha: Mostra das 07:30 até as 11:30. Integral somente das 07:30 as 17:30, os dois estão mostrando juntos. Ou seja, Ao clicar no período integral, ele mostra horários das 07:30 as 11:30.
+
+Faça utilizando mcp context7 e mcp sequentialthinking.
+
+22-
+
+Parte mais pesada do site, vamos fazer usuários, permissões e login.
+
+Se necessário mude o banco de dados para incluir em docentes o email e senha, sendo a senha base 'senaisp'. Faça a pagina de login inicial, onde você não pode acessar o site se você não estiver logado, após entrar no site pela primeira vez e se a senha for 'senaisp', aparecer uma modal pra colocar uma senha da escolha, a senha deve ser encriptografada, no site, deve ter 2 usuários. O admin e o Gestor. O admin pode fazer tudo, incluindo adicionar usuários e redefinir a senha de volta para 'senaisp', onde novamente aparece para mudar a senha após entrar. O gestor vai poder adicionar mas não remover nem editar sem a permissão do admininstrador.
+
+na nav-bar será adicionado um link extra, que redireciona para o local onde pode-se registrar, editar e remover usuários, que será apenas visível ao admininstrador
+
+No site, o header aparece. 'Bem-vindo, gestor', mude para que seja 'Bem-vindo, (nome da pessoa)'.
+
+Ao clicar em sair, ele volta para a pagina de login.
+
+
+texto completo - 
+
+Implemente um sistema completo e seguro de autenticação e controle de permissões no projeto atual, criando a estrutura necessária no banco para armazenar usuários com os campos id, nome, email único, senha com hash seguro usando bcrypt ou Argon2 (nunca texto puro), role (admin ou gestor), flag obrigar_troca_senha e timestamps; bloqueie todo o acesso ao sistema para usuários não autenticados usando middleware no backend (não apenas controle visual no frontend); crie a página de login como rota inicial obrigatória; defina a senha padrão inicial como "senaisp" apenas no momento da criação ou redefinição, mas armazenando sempre o hash; caso o usuário entre com a senha padrão, force imediatamente a troca por meio de modal obrigatória com confirmação de senha e validação mínima de segurança, atualizando a flag obrigar_troca_senha após sucesso; implemente dois níveis de permissão onde admin pode criar, editar, remover usuários e redefinir senha para o padrão, enquanto gestor pode apenas criar usuários, sendo que qualquer tentativa indevida deve retornar 403 no backend; adicione na navbar um link de gerenciamento de usuários visível apenas para admin validado pelo backend; altere o header para exibir dinamicamente “Bem-vindo, {nome do usuário logado}”; implemente logout seguro destruindo a sessão/token e redirecionando para login; proteja todas as rotas sensíveis com verificação real de permissão no servidor, valide entradas contra SQL injection e XSS, e garanta que nenhuma ação administrativa dependa apenas de ocultação de interface.
+
+Importante:
+E-mail: admin@senai.br
+Senha: senaisp
+
+23-
+
+Professor: novo cargo, terá permissão apenas para ver sua agenda pessoal, ou seja, se o Miguel entrar, só verá a agenda dele mesmo e seus horários, não poderá adicionar, remover, ver, editar, nem selecionar nada, só ver seu próprio banco de horas.
+
+Gestor: Só terá permissão de editar as tabelas e adicionar, não poderá remover, poderá adicionar apenas professores.
+
+Planejamento - Icones muito próximo dos textos, separe um pouco na divlink exemplo: icone(gerar agenda) -> ícone (gerar agenda).
+
+Gerar agenda - integral continua aparecendo os horários da manha (07:30 - 11:30)
+
+
+24- 
+
+-- Apenas no usuário do professor ---
+
+Mudar layout, Ao invez de planejamento, mostrar apenas 'calendario', e mostrar o calendário completo daquele professor, não precisa da tabela de professores.
+
+Dashboard (modo professor) - Refazer completamente o design, mostrar apenas relacionado ao quanto o professor trabalhou e quanto falta ele trabalhar  
+
+-- Outros --
+
+Turmas - Ao cadastrar uma nova turma, mandar direto pro calendário e salvar no banco de agenda, adicionar também opção de escolher os dias da semana (segunda, terça, quarta, quinta e ou sexta). Data fim deve ser data inicio + carga horaria total do curso, ou seja: se começa dia 25 e a carga horária total do curso é 24 horas, deve 'terminar' no dia 26, desde que: Seja um dia com aula e não seja domingo
+
+Gerar agenda - período manha: aparecer somente das 07:30 as 11:30. Tarde: aparecer somente 13:30 as 17:30. Noite: Aparecer somente 19:30 as 23:30, não permitir adicionar aulas de sabado. Integral: somente 07:30 as 17:30. Mudar o design de domingo para que seja mais visivelmente 'disabilitado'. Ter 2 filtros, por área e por nome, também incluir um input que você pode pesquisar o nome do professor. Mudar cor de quando o professor esta tendo aula pra vermelho, e se o professor estiver disponível, deixar com a cor verde suave. a mesma que está sendo usada agora. adicionar cor amarela de 'Reservado'. Ao selecionar o professor, mostrar do lado de período qual 'periodo' está disponível para o professor. Mudar lógica de cadastrar horário, ser o mesmo de 'nova turma'. ou seja, adicionar uma nova turma e puxar direto pra tabela de agenda
+
+erro: Ambiente não está sendo puxado para dentro de 'cadastrar horario'. 
+
+texto inteiro:
+
+Implementar a reformulação completa do módulo de Turmas e Agenda. A lógica de “Cadastrar Horário” deve ser removida completamente do sistema. A partir de agora, toda criação de horários deve ocorrer exclusivamente através da criação de uma nova turma. Não pode existir fluxo separado para criação manual de horários. Ao salvar uma nova turma, o sistema deve obrigatoriamente persistir os dados da turma no banco de dados, gerar automaticamente todos os registros correspondentes na tabela de agenda e redirecionar imediatamente o usuário para a tela de calendário após a confirmação do salvamento.
+
+O cadastro de turma deve conter obrigatoriamente os seguintes campos: curso_id, professor_id, area_id, ambiente_id, carga_horaria_total (inteiro em horas), data_inicio (date), periodo (enum obrigatório com valores MANHA, TARDE, NOITE ou INTEGRAL) e dias_semana (array obrigatório contendo apenas SEGUNDA, TERCA, QUARTA, QUINTA e/ou SEXTA). Não permitir sábado sob nenhuma hipótese. Domingo nunca pode ser considerado dia letivo, mesmo que selecionado manualmente por manipulação externa. O campo ambiente_id deve ser corretamente persistido no banco e vinculado aos registros da agenda, corrigindo o erro atual onde o ambiente não está sendo salvo no fluxo de cadastro.
+
+Os períodos devem obedecer estritamente aos seguintes horários fixos e imutáveis: MANHA das 07:30 às 11:30 totalizando 4 horas por dia; TARDE das 13:30 às 17:30 totalizando 4 horas por dia; NOITE das 19:30 às 23:30 totalizando 4 horas por dia; INTEGRAL das 07:30 às 17:30 totalizando 8 horas por dia. A interface da agenda deve exibir exclusivamente o intervalo correspondente ao período selecionado e bloquear qualquer tentativa de criação ou renderização de aula fora desses horários. Não deve haver possibilidade de sobrescrever manualmente horário de início ou fim.
+
+A data final da turma não pode ser digitável e deve ser calculada automaticamente. O cálculo deve seguir obrigatoriamente o seguinte algoritmo: definir horas_por_dia conforme o período selecionado; calcular total_dias_necessarios dividindo carga_horaria_total por horas_por_dia; se o resultado não for número inteiro exato, bloquear o cadastro com erro e não permitir arredondamento ou fracionamento; a partir da data_inicio iterar cronologicamente considerando apenas os dias da semana selecionados; ignorar automaticamente todos os domingos; ignorar sábados a noite; contar apenas dias válidos até atingir total_dias_necessarios; a última data válida será a data_final. Esse cálculo deve ocorrer no backend para garantir integridade. O frontend pode exibir prévia, mas a regra oficial deve estar no servidor.
+
+Após salvar a turma, o sistema deve gerar automaticamente um registro na tabela agenda para cada dia válido calculado. Cada registro deve conter obrigatoriamente turma_id, professor_id, ambiente_id, data, horario_inicio, horario_fim, periodo e status definido como “CONFIRMADO”. Todos os registros devem respeitar integridade referencial. Não pode existir inserção parcial: caso ocorra erro em qualquer etapa, a operação inteira deve ser revertida utilizando transação.
+
+Na visualização da agenda, domingo deve aparecer visualmente desabilitado, com cor cinza claro, não clicável e com cursor bloqueado. Sábado não pode permitir criação de aula somente durante a noite. Implementar cores dinâmicas de status para professor: vermelho para quando estiver em aula, verde suave (manter padrão atual do sistema) para disponível e amarelo para reservado. A renderização deve ser dinâmica baseada na ocupação real da agenda.
+
+Adicionar filtros obrigatórios na tela de agenda: filtro por área (dropdown), filtro por nome da turma (campo texto) e campo de busca por nome do professor. Os filtros devem funcionar de forma combinada utilizando lógica AND, atualizando a listagem em tempo real ou após submissão, mas sempre respeitando combinação simultânea.
+
+Ao selecionar um professor no cadastro da turma, o sistema deve consultar a agenda futura desse professor, identificar períodos já ocupados e exibir dinamicamente ao lado do campo “Período” quais períodos estão disponíveis. Essa informação deve ser recalculada automaticamente sempre que o professor for alterado.
+
+Bloquear o cadastro caso ocorra qualquer uma das seguintes situações: professor já possuir aula no mesmo horário e data; ambiente já estiver ocupado no mesmo horário e data; carga horária não for múltipla exata das horas por dia do período; nenhum dia da semana for selecionado; tentativa de inclusão de sábado a noite; conflito de integridade relacional; inconsistência de dados enviada manualmente via requisição externa. Todas as validações devem existir tanto no frontend quanto obrigatoriamente no backend. Não confiar apenas na validação visual.
+
+O resultado final esperado é o seguinte comportamento: criar turma gera automaticamente todos os registros de agenda; data final é calculada automaticamente sem intervenção manual; agenda respeita rigorosamente os horários por período; professores exibem status visual correto; filtros funcionam combinados; ambiente é corretamente persistido e vinculado; não existe mais criação manual isolada de horário; todas as regras são validadas no servidor garantindo consistência total do banco de dados.
+
+25 - 
+
+Usuário Professor: 'Próximas Aulas', mostrar as aulas separadas por períodos, e ao invez de escrever 25/02/2026 a 07/03/2026 em baixo, mostrar somente o dia da aula, exemplo: quinta feira dia 26. erro: Calendário não mostrando os horários de aula.
+
+-- Outros --
+
+Dashboard - fazer com que seja mais fácil de entender o horário do professor no resumo, se necessário, mudar a maneira que funciona. Também adicionar Input para puxar o nome do professor se desejado na parte de 'filtrar professor'.
+
+Modo Simulação - Em 'Docente Sugerido', opção de mudar o docente e escolher outro, mudar o botão de 'ver' por 'outros' e ao clicar, abrir uma modal que permite você selecionar outro professor, nessa modal terá filtros: 'por área', 'maior disponibilidade' ou 'menor disponibilidade', e um input para colocar um nome específico.
+Remover a logica de 'outros disponíveis' e mudar por essa, em ambiente fazer a mesma coisa que professor, porém os filtros serão: 'por área' e 'pesquisar por nome especifico'.
+
+Gerar Agenda - 'Modo Reserva' - Clicar no botão abre o modo de selecionar as datas, ao selecionar, adicionar um botão de confirmar, confirmando, abre a modal de registrar, onde o usuário precisa registrar a turma para aquele professor, automaticamente colocar aquele professor em 'docente 1', puxar a data da semana, exemplo: se o usuário clicou em cima de segunda e sexta, automaticamente selecionar segunda e sexta, e o período também. Data início deve ser o primeiro dia selecionado.
+
+Gerar Agenda - Se um professor estiver selecionado em uma semana na segunda feira e na quarta e for necessário adicionar mais aulas naquela semana, desativar as opções que o professor já está tendo aula. Exemplo: Professor tem aula segunda e quarta, portanto se eu querer adicionar alguma aula naquela semana ou período, as opções de segunda e quarta estarão desativadas. 
+
+26 - 
+
+Agenda - Adicionar professor: colocar um button que abre uma modal com vários filtros para selecionar o professor, incluindo um input para o nome, quase o mesmo estilo de simulação ao selecionar outros professores/ ambientes. Exemplo na primeira foto:
+
+Agenda - refazer o modo reserva:
+
+Modo reserva: primeiramente, clicar no botão, selecionar datas e confirmar.
+
+Após confirmado: Mudar a cor da data para amarelo. ao clicar em cima, vai pra modal de adicionar o horário, mesma maneira que está, só que com as mesmas opções de turma. Ou seja, replique turma na agenda. exemplo na segunda foto:
+
+
+Agenda - Período:
+
+Não funcionando, Período manha noite e integral aparecendo os horários.
+nova ordem de botões: Manhã -> Integral -> Noite.
+
+Manhã - apenas 07:30 (mínimo) -> 13:30 (máximo).
+Integral - apenas 07:30 (mínimo) -> 17:30 (máximo).
+Noite - apenas 19:30 (mínimo) -> 22:30 (máximo).
+
+27 -
+
+Simulador - Está aparecendo a pessoa mais ocupada, e não a pessoa mais disponível. Não consigo alterar o docente, e em ambiente, o filtro não funciona.
+
+Agenda - Ao escolher um professor, mostrar o período manhã mais próximo do professor. Adicionar algo visual se tiver aula naquele dia em um período diferente, exemplo na primeira imagem mandada (obs: pode-se mudar o design completamente, isso é apenas uma base extremamente simples para representar minha ideia em modo visual):
+
+Agenda - se o período não ter aula, ao clicar no mês e abrir a seleção de mês, mostrar no lado 'Possui aulas em outros periodos', ou algo visual para mais fácil entendimento
+
+28 - 
+
+Adicionar opção de tirar filtro de periodo, mostrar todas as datas.
+
+Erros: 'Miguel' aparece livre em periodos que ele não está livre
+
+Agenda - o texto está da mesma cor, ou seja, ele não aparece, mude a cor para ficar visivel no modo claro e escuro.
+
+Agenda - Modo Reserva: Faça uma nova tabela (ou altere colunas em alguma tabela ja existente) se necessário no banco de dados para que salve os dias reservados, e se estiver reservado, ao clicar em cima, abra a modal, basicamente a mesma coisa, apenas salve o dia reservado no banco de dado como data reservada.
+
+agenda - ao escolher um professor como 2 docente ou 3 docente, deve salvar aquele mesmo horario com aquele professor nos horarios tambem. Exemplo: O professor Miguel tem uma aula das 07:30 as 13:30, e foi marcado o matheus como doscente junto a ele, ou seja, o matheus também deve estar ocupado das 07:30 as 13:30 
+
+29 - 
+
+Pontos importantes: Quebrou a tabela de fevereiro ao cadastrar uma reserva na agenda em gerar agenda, dashboard: continua mostrando tempo livre errado no professor, mostra que ele está disponível em um horário que ele não está.
+
+30 - 
+
+Agenda - Fevereiro continua quebrado, não aparece a agenda, provavelmente por culpa do reservar horário, ao tentar entrar em 'manha', que foi quando eu reservei, ele não aparece nada e meio que 'crasha', porem funciona noturno e integral.
+
+Agenda- ao selecionar um professor, vá para a data mais recente com base no seu tempo, ou seja, se voce estiver no dia 26 de fevereiro, vai pro mes de fevereiro.
+
+31 - 
+
+Se um professor tiver uma aula de manha, não permitir cadastrar uma aula integral também, Adicionar período 'tarde', aplique as mesmas logicas dos outros para o período
+
+
+32 - 
+
+Considere:
+
+a pasta parafal-horario como o projeto do Parafal
+a pasta instável-teste como o projeto do Miguel
+
+
+33 - 
+
+Planejamento - Gerar agenda: jogar em 'Agenda Professores' e substituir o calendário de 'Agenda professores' Pela agenda usada em 'Gerar Agenda', Adicionar ambos os gráficos dentro da div que contem os campos: 'timeline', 'blocos', 'calendário', 'Semestral'.
+
+novo cargo - CRI, apenas permissão de reservar e ver uma data especifica.
+
+Ambiente - novo ambiente, adicionar um valor dentro do select 'tipo' chamado 'outros', ele fará a Área vinculada mudar de select para input
+
+Cargo CRI - será apenas utilizado para ver os planejamentos e reservar datas, ao clicar em reservar
+
+Reservas - Refazer Modo de funcionamento.
+
+'Modo reserva', ao clicar no botão 'Modo reserva' abrir uma modal que pede a data inicial e data final, junto do dia da semana e o período.
+
+No dashboard, na área de resumo de horário de professores,mude o select para que inclue apenas as áreas que estão sendo usadas e cadastradas no momento. Ou seja, as áreas que não estão sendo usadas ou registradas, pode remover do select.
+
+Agenda Professores - Timeline - mudar para que seja idêntico ao 'Timeline' da pasta 'parafal-horario'
+
+Dashboard - Resumo de horários dos professores - Mudar a maneira que funciona, utilizar a mesma base de timeline da pasta 'parafal-horario', de modo que aparece o ano inteiro dos professores, mostrar 5 professores de cada área
+
+34 - 
+
+1- Even after you pick, it still shows other names, it should only show one name after you click on top of the green date.
+
+2- 'Modo Reserva', not working properly, specially in 'timeline', 'blocos', and 'semestral'.
+
+3- 'tabela professores', when you click on top of the green bar on one of the names, it should redirect you to 'Agenda Professores', but it redirects you to a bugged page.
+
+4- Whenever you click to register the date/hour it doesnt save to the database, none of it, nor the 'reservas' from 'modo reserva'. Make sure it shows properly and make you unable to register another date/hour during the time that person is already occupied by something, unless you change periods.
+
+35 - 
+
+* Leia e tente entender o que cada arquivo faz, e como ele funciona, antes de começar. *
+
+1-Modo Reserva, não da pra remover as reservas selecionadas, ao clicar em remover ele pede pra você escolher um dia que possui reserva, mesmo já selecionado.
+
+2-Modo Reserva, não poderia reservar por cima de uma data já reservada.
+
+3-Modo reserva, ao clicar em cima de uma data reservada, deve puxar todas as datas reservadas pra dentro da modal em 'dias da semana', exemplo: reservei segunda, quarta e sábado, ou seja, na próxima vez que eu clicar para registrar por cima das reservas, deveria automaticamente selecionar segunda, quarta e sábado
